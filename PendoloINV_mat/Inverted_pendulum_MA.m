@@ -203,7 +203,11 @@ f_G_position_Zeros = zero(f_G_position);
 % f_K_angle_Gain = 1000;
 % f_R_angle = -(s+1)*(s+3.8)/(s*(s+100));
 
-f_K_angle_Gain = 357;
+% f_K_angle_Gain = 357;
+% f_R_angle = -(s+3.1)*(s+6.8)/(s*(s+66));
+
+% f_K_angle_Gain = 96; %To enter 5%
+f_K_angle_Gain = 267;
 f_R_angle = -(s+3.1)*(s+6.8)/(s*(s+66));
 
 %Il meno è dovuto al voler lavorare nel luogo diretto (k_G<0 --> k_R<0 --> L>0)
