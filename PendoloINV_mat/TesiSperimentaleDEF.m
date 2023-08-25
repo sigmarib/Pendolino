@@ -143,16 +143,6 @@ cascade_f_KR_position = cascade_f_K_position_Gain * cascade_f_R_position;
 cascade_f_G_XTheta = minreal((G_lin_pos)/(G_lin_ang));
 
 %% Prog R_pos
-% figure(1)
-% margin(cascade_f_G_XTheta)
-% grid on
-% figure(2)
-% margin(cascade_f_KR_position)
-% grid on
-% figure(3)
-% margin(cascade_f_L_position)
-% grid on
-
 %Generalizzazione del predittore di smith per compensazione di zeria a
 %fase non minima
 zpk(cascade_f_G_XTheta)
@@ -169,7 +159,8 @@ D = s^2;
 %fdt del plant in un altro modo, introducendo da prima:
 Np_m = (s+5.153);
 
-cascade_f_G_XTheta_Smith = minreal(-0.36944 * Np_m*Nm/D);
+cascade_f_G_XTheta_Smith = minreal(0.36944 * Np_m*Nm/D);
+zpk(cascade_f_G_XTheta_Smith)
 
 
 %    -0.36944 (s+5.153)^2
@@ -178,6 +169,9 @@ cascade_f_G_XTheta_Smith = minreal(-0.36944 * Np_m*Nm/D);
 
 %Possiamo ora progettare il regolatore sulla base del plant con tutti i
 %poli nel semipiano sinistro a parte reale negativa
+
+R_position_Smith = 0.0143*(2.6*s+1)^2/s/(0.1*s+1);
+
 %% Pre-filtro
 %Dato che tau_p = 1/w_c
 %e il Ta <= 3/re -> re(=delta*w_c) = 3/Ta = 3/1.2
@@ -199,7 +193,9 @@ B_pf_2_alpha = alpha_angle * Ts * (I_angle - alpha_angle * A_pf * Ts)^-1 * B_pf;
 %% 
 
 % Funzione d'Anello
-cascade_f_L_position = minreal(cascade_f_KR_position * cascade_f_G_XTheta);
+%(Codice buono senza smith)cascade_f_L_position = minreal(cascade_f_KR_position * cascade_f_G_XTheta);
+
+cascade_f_L_position = minreal(R_position_Smith * cascade_f_G_XTheta);
 
 f_KR_position_LTI = ss(cascade_f_KR_position);
 A_CTRL_position = f_KR_position_LTI.A;
